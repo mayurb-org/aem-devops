@@ -1,44 +1,49 @@
 # azure-pipelines.yml
-
-#variables:
-#  CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
+variables:
+  PR_NUMBER: '${{ parameters.pullRequestId }}' # Set by Azure Pipelines
+  CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
 
 trigger:
   branches:
     include:
-      - main  # Replace with your desired branch or use '*' to include all branches
+      - main
 
-pr: none  # Disabling Pull Request triggers for simplicity. You can enable it if needed.
+pr: none
 
 pool:
-  vmImage: 'ubuntu-latest'  # Use an appropriate image for your script (Windows, macOS, etc.)
+  vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
-    # Check out the 'main' branch of the current repository
-    git config --global user.email "azure-pipelines@noreply.com"
-    git config --global user.name "Azure Pipelines"
-    git config --global init.defaultBranch origin/main
-    git fetch origin
-    git checkout origin/main
-  displayName: 'Checkout main branch'
+  - checkout: self
 
-- script: |
-    TARGET_GIT="https://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@github.com/mayurb-org/aem-devops.git"
-    
-    git checkout origin/main
-    git branch -l
-    #git branch -M main
+  - script: |
+      TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+      echo "GIT_REF=${TARGET_GIT}"
+      git remote add adobe ${TARGET_GIT}
+      cat .git/config
+    displayName: 'Add remote'
 
-    # Set up the adobe repository as a remote
-    git remote add adobe ${TARGET_GIT}
+  - script: |
+      if [ "$(Build.Reason)" == "PullRequest" ]; then
+        BRANCH_NAME=$(echo $BUILD_SOURCE_BRANCH | sed 's/refs\/heads\///')
+      elif [ "$(Build.Reason)" == "IndividualCI" ]; then
+        BRANCH_NAME=$(echo $BUILD_SOURCEBRANCH | sed 's/refs\/heads\///')
+      fi
+      echo "BRANCH_NAME=${BRANCH_NAME}"
+    displayName: 'Get branch name'
 
-    # Fetch and pull changes from the source repository
-    git fetch origin
-    git pull origin main
+  - script: |
+      git checkout $(BRANCH_NAME)
+      git push -f -v adobe $(BRANCH_NAME)
+    displayName: 'Sync branch (push)'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
-    # Push changes to the target repository
-    git push -f -v adobe main
-
-  displayName: 'Sync Source to Target Repository'
-
+  - script: |
+      if [ "$(Build.Reason)" == "PullRequest" ]; then
+        if [ $(PR.SourceBranch) != "refs/heads/main" ]; then
+          BRANCH_NAME=$(echo $(PR.SourceBranch) | sed 's/refs\/heads\///')
+          git push --delete -f -v adobe $(BRANCH_NAME)
+        fi
+      fi
+    displayName: 'Remove branch (delete)'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
