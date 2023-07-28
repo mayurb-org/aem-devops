@@ -20,6 +20,7 @@ steps:
     fetchDepth: 0
 
   - script: |      
+      git config credential.helper store
       TARGET_GIT="https://mayureshbhardwaj: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@github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
@@ -34,6 +35,7 @@ steps:
       fi
       echo "BRANCH_NAME=${BRANCH_NAME}"
 
+      git config credential.helper store
 
       git fsck --full
       git fetch origin
