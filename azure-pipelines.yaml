@@ -39,6 +39,8 @@ steps:
         BRANCH_NAME=$(Build.SourceBranchName)	
       elif [ "$(Build.Reason)" == "IndividualCI" ]; then
         BRANCH_NAME=$(Build.SourceBranchName)
+      elif [ "$(Build.Reason)" == "Manual" ]; then
+        BRANCH_NAME=$(Build.SourceBranchName)
       fi
       echo "BRANCH_NAME=${BRANCH_NAME}"
     displayName: 'Get branch name'
