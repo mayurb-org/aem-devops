@@ -1,7 +1,7 @@
 # azure-pipelines.yml
 
-variables:
-  CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
+#variables:
+#  CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
 
 trigger:
   branches:
@@ -19,7 +19,7 @@ steps:
   clean: true  # Clean any left-over artifacts from previous runs
 
 - script: |
-    TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+    TARGET_GIT="https://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@github.com/mayurb-org/aem-devops.git"
     
     git checkout main
     git branch -l
