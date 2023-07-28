@@ -49,7 +49,7 @@ steps:
       git checkout $(BRANCH_NAME)
       git push -f -v adobe $(BRANCH_NAME)
     displayName: 'Sync branch (push)'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
