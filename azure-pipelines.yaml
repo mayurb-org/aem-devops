@@ -21,7 +21,9 @@ steps:
 - script: |
     TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
     
-    git branch -M main
+    git checkout main
+    git branch -l
+    #git branch -M main
 
     # Set up the adobe repository as a remote
     git remote add adobe ${TARGET_GIT}
