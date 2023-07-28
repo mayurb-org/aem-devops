@@ -33,7 +33,7 @@ steps:
     git pull origin main
 
     # Push changes to the target repository
-    git push -u adobe main
+    git push -f -v adobe main
 
   displayName: 'Sync Source to Target Repository'
 
