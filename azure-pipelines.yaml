@@ -50,13 +50,16 @@ steps:
 
   - script: |
       git checkout $(Build.SourceBranchName)
+      echo "==============================="
+      git branch -b
+      echo "==============================="
       git push -f -v adobe $(Build.SourceBranchName)
     displayName: 'Sync branch (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
-        if [ $(System.PullRequest.SourceBranch) != "refs/heads/master" ]; then
+        if [ $(System.PullRequest.SourceBranch) != "refs/heads/main" ]; then
           BRANCH_NAME=$(echo $(System.PullRequest.SourceBranch) | sed 's/refs\/heads\///')
           git push --delete -f -v adobe $(BRANCH_NAME)
         fi
