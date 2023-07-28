@@ -18,6 +18,7 @@ steps:
     # Check out the 'main' branch of the current repository
     git config --global user.email "azure-pipelines@noreply.com"
     git config --global user.name "Azure Pipelines"
+    git config --global init.defaultBranch origin/main
     git fetch origin
     git checkout origin/main
   displayName: 'Checkout main branch'
@@ -25,7 +26,7 @@ steps:
 - script: |
     TARGET_GIT="https://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@github.com/mayurb-org/aem-devops.git"
     
-    git checkout main
+    git checkout origin/main
     git branch -l
     #git branch -M main
 
