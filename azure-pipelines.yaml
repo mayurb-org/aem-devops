@@ -1,5 +1,8 @@
 # azure-pipelines.yml
 
+variables:
+  CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
+
 trigger:
   branches:
     include:
