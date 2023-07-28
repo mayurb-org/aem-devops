@@ -1,0 +1,51 @@
+# azure-pipelines.yml
+
+trigger:
+  branches:
+    exclude:
+      - master
+
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+  - script: |
+      TARGET_GIT="https://github.com/mayurb-org/aem-devops.git"
+      echo "GIT_REF=${TARGET_GIT}" | tee -a $GITHUB_ENV
+      git remote add adobe ${TARGET_GIT}
+      cat .git/config
+    displayName: 'Add remote'
+
+  - script: |
+      if [ "$(Build.Reason)" == "PullRequest" ]; then
+        BRANCH_NAME=$(echo $BUILD_SOURCE_BRANCH | sed 's/refs\/heads\///')
+      elif [ "$(Build.Reason)" == "IndividualCI" ]; then
+        BRANCH_NAME=$(echo $BUILD_SOURCEBRANCH | sed 's/refs\/heads\///')
+      fi
+      echo "BRANCH_NAME=${BRANCH_NAME}" | tee -a $GITHUB_ENV
+    displayName: 'Get branch name'
+
+  - script: |
+      git checkout $(BRANCH_NAME)
+      git push -f -v adobe $(BRANCH_NAME)
+    displayName: 'Sync branch (push)'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+
+  - script: |
+      if [ "$(Build.Reason)" == "PullRequest" ]; then
+        if [ $(PR.SourceBranch) != "refs/heads/main" ]; then
+          BRANCH_NAME=$(echo $(PR.SourceBranch) | sed 's/refs\/heads\///')
+          git push --delete -f -v adobe $(BRANCH_NAME)
+        fi
+      fi
+    displayName: 'Remove branch (delete)'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
