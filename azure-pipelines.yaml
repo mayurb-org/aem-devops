@@ -58,5 +58,5 @@ steps:
           git push --delete -f -v adobe ${BRANCH_NAME} 
         fi
       fi
-    displayName: 'Remove branch (delete)'
+    displayName: 'Remove branch (delete) | TO check'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
