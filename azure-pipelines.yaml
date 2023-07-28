@@ -1,6 +1,5 @@
 # azure-pipelines.yml
 variables:
-  PR_NUMBER: '${{ parameters.pullRequestId }}' # Set by Azure Pipelines
   CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
 
 trigger:
