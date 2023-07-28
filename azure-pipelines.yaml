@@ -51,7 +51,7 @@ steps:
   - script: |
       git checkout $(Build.SourceBranchName)
       echo "==============================="
-      git branch -b
+      git branch -l
       echo "==============================="
       git push -f -v adobe $(Build.SourceBranchName)
     displayName: 'Sync branch (push)'
