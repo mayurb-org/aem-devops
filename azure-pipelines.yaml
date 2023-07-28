@@ -35,7 +35,7 @@ steps:
       echo ${BRANCH_NAME}
       ls -ltrha
       git checkout main
-      git push -f -v adobe HEAD:main
+      git push -f -v adobe HEAD:main --force
     displayName: 'Sync branch (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
@@ -43,7 +43,7 @@ steps:
       if [ "$(Build.Reason)" == "PullRequest" ]; then
         if [ $(PR.SourceBranch) != "refs/heads/main" ]; then
           BRANCH_NAME=$(echo $(PR.SourceBranch) | sed 's/refs\/heads\///')
-          git push --delete -f -v adobe ${BRANCH_NAME}
+          git push --delete -f -v adobe ${BRANCH_NAME} 
         fi
       fi
     displayName: 'Remove branch (delete)'
