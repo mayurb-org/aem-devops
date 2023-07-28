@@ -1,8 +1,9 @@
 # azure-pipelines.yml
 
 trigger:
-- main
-- master
+  branches:
+    include:
+      - main
 
 pr: none
 
@@ -18,19 +19,19 @@ steps:
       addToPath: true
 
   - script: |
-      TARGET_GIT="https://github.com/mayurb-org/aem-devops.git"
-      echo "GIT_REF=${TARGET_GIT}" | tee -a $GITHUB_ENV
+      TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+      echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
       cat .git/config
     displayName: 'Add remote'
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
-        BRANCH_NAME=$(echo $(Build.SourceBranch)	 | sed 's/refs\/heads\///')
+        BRANCH_NAME=$(Build.SourceBranchName)	
       elif [ "$(Build.Reason)" == "IndividualCI" ]; then
-        BRANCH_NAME=$(echo $(Build.SourceBranch) | sed 's/refs\/heads\///')
+        BRANCH_NAME=$(Build.SourceBranchName)
       fi
-      echo "BRANCH_NAME=${BRANCH_NAME}" | tee -a $GITHUB_ENV
+      echo "BRANCH_NAME=${BRANCH_NAME}"
     displayName: 'Get branch name'
 
   - script: |
@@ -41,8 +42,8 @@ steps:
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
-        if [ $(PR.SourceBranch) != "refs/heads/main" ]; then
-          BRANCH_NAME=$(echo $(PR.SourceBranch) | sed 's/refs\/heads\///')
+        if [ $(System.PullRequest.SourceBranch) != "refs/heads/master" ]; then
+          BRANCH_NAME=$(echo $(System.PullRequest.SourceBranch) | sed 's/refs\/heads\///')
           git push --delete -f -v adobe $(BRANCH_NAME)
         fi
       fi
