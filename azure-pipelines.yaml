@@ -21,10 +21,10 @@ steps:
 
   - script: |
 
-      echo $(CM_CREDENTIALS)
-      echo $(GIT_USER)
+      echo "$(CM_CREDENTIALS)"
+      echo "$(GIT_USER)"
       
-      TARGET_GIT="https://$(GIT_USER):$(CM_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+      TARGET_GIT="https://"$(GIT_USER)":"$(CM_CREDENTIALS)"@github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
       cat .git/config
