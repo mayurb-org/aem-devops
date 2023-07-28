@@ -47,7 +47,7 @@ steps:
       git fsck --full
       git fetch origin
       ls -ltrha
-      git push -f -v adobe HEAD:${BRANCH_NAME} --force
+      git push -f -v adobe ${BRANCH_NAME} --force
     displayName: 'Get branch name and Sync (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
