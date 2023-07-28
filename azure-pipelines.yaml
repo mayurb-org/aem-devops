@@ -6,64 +6,29 @@ variables:
 trigger:
   branches:
     include:
-      - main
+      - main  # Replace with your desired branch or use '*' to include all branches
 
-pr: none
+pr: none  # Disabling Pull Request triggers for simplicity. You can enable it if needed.
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-latest'  # Use an appropriate image for your script (Windows, macOS, etc.)
 
 steps:
-  - checkout: self
+- checkout: self  # This will checkout the default branch of the current repository
+  persistCredentials: true
+  clean: true  # Clean any left-over artifacts from previous runs
 
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-      addToPath: true
+- script: |
+    TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+    # Set up the target repository as a remote
+    git remote add adobe ${TARGET_GIT}
 
-  - script: |
-      TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
-      echo "GIT_REF=${TARGET_GIT}"
-      git remote add adobe ${TARGET_GIT}
-      cat .git/config
-    displayName: 'Add remote'
+    # Fetch and pull changes from the source repository
+    git fetch origin
+    git pull origin main
 
-  - script: |
-      echo $(Build.Reason)
-      echo "==============================="
-      echo "==============================="
-      echo $(Build.SourceBranchName)
-      echo "==============================="
-      echo "==============================="
-      echo $(Build.SourceBranch)
-      echo "==============================="
-      echo "==============================="
-      if [ "$(Build.Reason)" == "PullRequest" ]; then
-        BRANCH_NAME=$(Build.SourceBranchName)	
-      elif [ "$(Build.Reason)" == "IndividualCI" ]; then
-        BRANCH_NAME=$(Build.SourceBranchName)
-      elif [ "$(Build.Reason)" == "Manual" ]; then
-        BRANCH_NAME=$(Build.SourceBranchName)
-      fi
-      echo "BRANCH_NAME=${BRANCH_NAME}"
-    displayName: 'Get branch name'
+    # Push changes to the target repository
+    git push adobe main
 
-  - script: |
-      git checkout $(Build.SourceBranchName)
-      git commit -m "new commits"
-      echo "==============================="
-      git branch -l
-      echo "==============================="
-      git push -f -v adobe $(Build.SourceBranchName)
-    displayName: 'Sync branch (push)'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+  displayName: 'Sync Source to Target Repository'
 
-  - script: |
-      if [ "$(Build.Reason)" == "PullRequest" ]; then
-        if [ $(System.PullRequest.SourceBranch) != "refs/heads/main" ]; then
-          BRANCH_NAME=$(echo $(System.PullRequest.SourceBranch) | sed 's/refs\/heads\///')
-          git push --delete -f -v adobe $(BRANCH_NAME)
-        fi
-      fi
-    displayName: 'Remove branch (delete)'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
