@@ -34,8 +34,8 @@ steps:
   - script: |
       echo ${BRANCH_NAME}
       ls -ltrha
-      git checkout ${BRANCH_NAME}
-      git push -f -v adobe HEAD:${BRANCH_NAME}
+      git checkout main
+      git push -f -v adobe HEAD:main
     displayName: 'Sync branch (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
