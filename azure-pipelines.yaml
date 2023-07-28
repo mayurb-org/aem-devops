@@ -49,8 +49,8 @@ steps:
     displayName: 'Get branch name'
 
   - script: |
-      git checkout ${BRANCH_NAME}
-      git push -f -v adobe ${BRANCH_NAME}
+      git checkout $(Build.SourceBranchName)
+      git push -f -v adobe $(Build.SourceBranchName)
     displayName: 'Sync branch (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
