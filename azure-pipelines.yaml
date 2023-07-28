@@ -20,6 +20,9 @@ steps:
 
 - script: |
     TARGET_GIT="https://$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+    
+    git branch -M main
+
     # Set up the adobe repository as a remote
     git remote add adobe ${TARGET_GIT}
 
@@ -28,7 +31,7 @@ steps:
     git pull origin main
 
     # Push changes to the target repository
-    git push adobe main
+    git push -u adobe main
 
   displayName: 'Sync Source to Target Repository'
 
