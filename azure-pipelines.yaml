@@ -16,7 +16,7 @@ steps:
   - checkout: self
 
   - script: |
-      TARGET_GIT="https://mayureshbhardwaj:$(CLOUD_MANAGER_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
+      TARGET_GIT="https://mayureshbhardwaj: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@github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
       cat .git/config
