@@ -32,6 +32,8 @@ steps:
     displayName: 'Get branch name'
 
   - script: |
+      echo $(BRANCH_NAME)
+      ls -ltrh
       git checkout $(BRANCH_NAME)
       git push -f -v adobe $(BRANCH_NAME)
     displayName: 'Sync branch (push)'
