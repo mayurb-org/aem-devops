@@ -1,11 +1,12 @@
 # azure-pipelines.yml
 variables:
-  CLOUD_MANAGER_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
+  CM_CREDENTIALS: $(CLOUD_MANAGER_CREDENTIALS)
+  GIT_USER: $(gitusername)
 
 trigger:
   branches:
     include:
-      - main
+      - "*"
 
 pr: none
 
@@ -19,7 +20,7 @@ steps:
     fetchDepth: 0
 
   - script: |
-      TARGET_GIT="https://mayureshbhardwaj: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@github.com/mayurb-org/aem-devops.git"
+      TARGET_GIT="https://$(GIT_USER):$(CM_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
       cat .git/config
@@ -39,14 +40,6 @@ steps:
       git push -f -v adobe HEAD:${BRANCH_NAME} --force
     displayName: 'Get branch name and Sync (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
-
-#  - script: |
-#      echo ${BRANCH_NAME}
-#      ls -ltrha
-#      git checkout main
-#      git push -f -v adobe HEAD:main --force
-#    displayName: 'Sync branch (push)'
-#    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
