@@ -26,9 +26,9 @@ steps:
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
-        BRANCH_NAME=$(echo $BUILD_SOURCE_BRANCH | sed 's/refs\/heads\///')
+        BRANCH_NAME=$(echo $(Build.SourceBranch)	 | sed 's/refs\/heads\///')
       elif [ "$(Build.Reason)" == "IndividualCI" ]; then
-        BRANCH_NAME=$(echo $BUILD_SOURCEBRANCH | sed 's/refs\/heads\///')
+        BRANCH_NAME=$(echo $(Build.SourceBranch) | sed 's/refs\/heads\///')
       fi
       echo "BRANCH_NAME=${BRANCH_NAME}" | tee -a $GITHUB_ENV
     displayName: 'Get branch name'
