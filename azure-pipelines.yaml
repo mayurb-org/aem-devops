@@ -29,15 +29,19 @@ steps:
         BRANCH_NAME=$(echo $BUILD_SOURCEBRANCH | sed 's/refs\/heads\///')
       fi
       echo "BRANCH_NAME=${BRANCH_NAME}"
-    displayName: 'Get branch name'
 
-  - script: |
-      echo ${BRANCH_NAME}
       ls -ltrha
-      git checkout main
-      git push -f -v adobe HEAD:main --force
-    displayName: 'Sync branch (push)'
+      git push -f -v adobe HEAD:${BRANCH_NAME} --force
+    displayName: 'Get branch name and Sync (push)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+
+#  - script: |
+#      echo ${BRANCH_NAME}
+#      ls -ltrha
+#      git checkout main
+#      git push -f -v adobe HEAD:main --force
+#    displayName: 'Sync branch (push)'
+#    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
