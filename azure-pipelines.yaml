@@ -49,10 +49,10 @@ steps:
     displayName: 'Get branch name'
 
   - script: |
-      git checkout master
-      git push -f -v adobe master
+      git checkout ${BRANCH_NAME}
+      git push -f -v adobe ${BRANCH_NAME}
     displayName: 'Sync branch (push)'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI'))
 
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
