@@ -14,6 +14,9 @@ pool:
 
 steps:
   - checkout: self
+    persistCredentials: true
+    clean: true
+    fetchDepth: 0
 
   - script: |
       TARGET_GIT="https://mayureshbhardwaj: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@github.com/mayurb-org/aem-devops.git"
