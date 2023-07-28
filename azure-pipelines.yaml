@@ -33,7 +33,7 @@ steps:
 
   - script: |
       echo $(BRANCH_NAME)
-      ls -ltrh
+      ls -ltrha
       git checkout $(BRANCH_NAME)
       git push -f -v adobe $(BRANCH_NAME)
     displayName: 'Sync branch (push)'
