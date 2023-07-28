@@ -30,7 +30,7 @@ steps:
 
   - script: |      
       git config --global --unset credential.helper
-      TARGET_GIT="https://mayureshbhardwaj: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@github.com/mayurb-org/aem-devops.git"
+      TARGET_GIT="https://$(GIT_USER):$(CM_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
       cat .git/config
