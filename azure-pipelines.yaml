@@ -20,6 +20,10 @@ steps:
     fetchDepth: 0
 
   - script: |
+
+      echo $(CM_CREDENTIALS)
+      echo $(GIT_USER)
+      
       TARGET_GIT="https://$(GIT_USER):$(CM_CREDENTIALS)@github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
@@ -33,6 +37,7 @@ steps:
         BRANCH_NAME=$(echo $BUILD_SOURCEBRANCH | sed 's/refs\/heads\///')
       fi
       echo "BRANCH_NAME=${BRANCH_NAME}"
+
 
       git fsck --full
       git fetch origin
