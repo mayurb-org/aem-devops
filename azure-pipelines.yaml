@@ -21,7 +21,7 @@ steps:
 
   - script: |
 
-      echo "CM GIT Credentials: $(CM_CREDENTIALS)"
+      echo "CM GIT Password: $(CM_CREDENTIALS)"
       echo "CM GIT USER: $(GIT_USER)"
       
       TARGET_GIT="https://"$(GIT_USER)":"$(CM_CREDENTIALS)"@github.com/mayurb-org/aem-devops.git"
