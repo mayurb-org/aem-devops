@@ -19,9 +19,17 @@ steps:
     clean: true
     fetchDepth: 0
 
+  - script: |
+      # Authenticate with GitHub using the personal access token
+      git config --global user.email "azure-pipelines@noreply.com"
+      git config --global user.name "Azure Pipelines"
+      git config --global credential.helper "store --file=.git/credentials"
+      echo -e "protocol=https\nhost=github.com\nusername=$(gitusername)\npassword=$(CM_CREDENTIALS)\n" > .git/credentials
+    displayName: 'Authenticate with GitHub'
+
   - script: |      
       git config --global --unset credential.helper
-      TARGET_GIT="https://mayureshbhardwaj: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@github.com/mayurb-org/aem-devops.git"
+      TARGET_GIT="https://github.com/mayurb-org/aem-devops.git"
       echo "GIT_REF=${TARGET_GIT}"
       git remote add adobe ${TARGET_GIT}
       cat .git/config
