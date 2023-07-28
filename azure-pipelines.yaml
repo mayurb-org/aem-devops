@@ -26,6 +26,15 @@ steps:
     displayName: 'Add remote'
 
   - script: |
+      echo $(Build.Reason)
+      echo "==============================="
+      echo "==============================="
+      echo $(Build.SourceBranchName)
+      echo "==============================="
+      echo "==============================="
+      echo $(Build.SourceBranch)
+      echo "==============================="
+      echo "==============================="
       if [ "$(Build.Reason)" == "PullRequest" ]; then
         BRANCH_NAME=$(Build.SourceBranchName)	
       elif [ "$(Build.Reason)" == "IndividualCI" ]; then
